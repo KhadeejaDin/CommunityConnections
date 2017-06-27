@@ -1,5 +1,13 @@
-p {
-	color: blue;
-	font-size: 30px;
-	border: 1px solid black;
+.myRect1 {
+	background-color: #48898C;
+	border-radius: 20px;
+}
+
+.myRect2 {
+	background-color: #F072EC;
+}
+
+
+.myRect3 {
+	background-color: #EDDFED;
 }
