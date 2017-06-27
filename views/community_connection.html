@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <link rel="stylesheet"
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script
+            src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            /*
+            $("#list").click(function() {
+                $.get("/service/lab/list", {
+                    "lab" : $("#label1").val()
+                }, function(dataSet, status) {
+                    console.log(dataSet);
+                    $("#customer_table").dataTable({
+                        "destroy" : true,
+                        data : dataSet,
+                        columns : [ {
+                            title : "Treatment"
+                        }, {
+                            title : "Customer"
+                        } ]
+                    })
+                })
+
+                $.get("/service/lab/show", {
+                    "lab" : $("#label1").val()
+                }, function(dataSet, status) {
+                    console.log(dataSet);
+                    $("#lab_table").dataTable({
+                        "destroy" : true,
+                        data : dataSet,
+                        columns : [ {
+                            title : "Treatment"
+                        }, {
+                            title : "Gate"
+                        }, {
+                            title : "Visit"
+                        }, {
+                            title : "Visit%"
+                        }, {
+                            title : "description"
+                        } ]
+                    });
+
+                });
+
+
+                $("#treatment").val("");
+                $("#customer").val("");
+                $("#gate").val("");
+                $("#description").val("");
+
+            });
+            */
+
+            $("#list-complaint").click(
+                    function() {
+                        $.ajax({
+                            url: "http://127.0.0.1:8080/rest/query",
+                            jsonp: "callback",
+                            dataType: "jsonp",
+                            data: {
+                                q: "select * from complaint"
+                            },
+                            success: function( response ) {
+                                console.log( response );
+                                if($('#complaint_table tr').length > 0){
+                                    $("#complaint_table").dataTable().fnDestroy();
+                                }
+                                $("#complaint_table").dataTable(response);
+                            }
+                        });
+                    }
+            )
+
+            $("#add-complaint").click(
+                    function() {
+                       $.ajax({
+                           url: "http://127.0.0.1:8080/rest/update",
+                           jsonp: "callback",
+                           dataType: "jsonp",
+                           data: {
+                               q: "insert complaint(content,category_id) values(" + '"'
+                               + $("#complaint_text").val()
+                               + '","'
+                               + $("#category_id").val()
+                               + '");'
+                           },
+                           success: function (response) {
+                               console.log(response);
+                               $("#list-complaint").click();
+                           }
+                       })
+            });
+            /*
+            $("#customer_table").on('click', 'tr', function() {
+                var customer_table = $("#customer_table").DataTable();
+                var data = customer_table.row(this).data();
+                $("#treatment").val(data[0]);
+                $("#customer").val(data[1]);
+                $("#gate").val("");
+                $("#description").val("");
+
+            });
+
+            $("#lab_table").on('click', 'tr', function() {
+                var customer_table = $("#lab_table").DataTable();
+                var data = customer_table.row(this).data();
+                $("#treatment").val(data[0]);
+                $("#customer").val("");
+                $("#gate").val(data[1]);
+                $("#description").val(data[4]);
+
+            });
+
+            $("#add").click(function() {
+                $.get("/service/lab/add", {
+                    "lab" : $("#lab").val(),
+                    "treatment" : $("#treatment").val(),
+                    "customer" : $("#customer").val()
+                }, function(data, status) {
+                    $("#list").click();
+                });
+            });
+            $("#add_treatment").click(function() {
+                $.get("/service/lab/addtreatment", {
+                    "lab" : $("#lab").val(),
+                    "treatment" : $("#treatment").val(),
+                    "description" : $("#description").val()
+                }, function(data, status) {
+                    $("#list").click();
+                    $("#returned_info").text(data);
+                });
+            });
+            $("#change_gate").click(function() {
+                $.get("/service/lab/changegate", {
+                    "lab" : $("#lab").val(),
+                    "treatment" : $("#treatment").val(),
+                    "gate" : $("#gate").val()
+                }, function(data, status) {
+                    $("#list").click();
+                    $("#returned_info").text(data);
+                });
+            });
+            $("#delete").click(function() {
+                $.get("/service/lab/delete", {
+                    "lab" : $("#lab").val(),
+                    "treatment" : $("#treatment").val(),
+                    "customer" : $("#customer").val()
+                }, function(data, status) {
+                    $("#list").click();
+                });
+            });
+
+            $("#reset_visit").click(function() {
+                $.get("/service/lab/resetvisit", {
+                    "lab" : $("#lab").val()
+                }, function(data, status) {
+                    $("#list").click();
+                    $("#returned_info").text(data);
+                });
+            });
+
+            $("#remove_treatment").click(function() {
+                $.get("/service/lab/removetreatment", {
+                    "lab" : $("#lab").val(),
+                    "treatment" : $("#treatment").val()
+                }, function(data, status) {
+                    $("#list").click();
+                    $("#returned_info").text(data);
+                });
+            });
+            */
+        });
+    </script>
+</head>
+<body>
+
+<div class="jumbotron text-center">
+    <h1>NYC DEMO</h1>
+    <p>Management Console</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div id="googleMap" style="width:100%;height:400px;"></div>
+
+        <script>
+            function myMap() {
+
+                var myLatLng = {lat: 40.7313629, lng: -74.01074099999999};
+
+                var mapProp= {
+                    center:new google.maps.LatLng(40.7313629,-74.00074099999999),
+                    zoom:12,
+                };
+                var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'complaints!'
+                });
+            }
+        </script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJ4t2Td0P6-jUPKNZSt0-5TT6QQkk2CNY&callback=myMap"></script>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <div class="btn-toolbar vertical-center text-center">
+                <button type="button" class="btn btn-info" id="list-complaint">List Complaint</button>
+                <button type="button" class="btn btn-primary" id="add-complaint">Add Complaint</button>
+            </div>
+        </div>
+        <div class="col-sm-1"></div>
+    </div>
+    <div class="row">
+        <div style="margin-top: 20px;"></div>
+    </div>
+    <div class="row">
+        <div id="control_col" class="col-sm-2">
+            <div>content</div>
+            <div>
+                <input type=text id="complaint_text" value=""/>
+            </div>
+            <br>
+            <div>category</div>
+            <div>
+                <input type=text id="category_id" value=""/>
+            </div>
+
+        </div>
+        <div id="customer_table_col" class="col-sm-5">
+            <div class="row">
+                <div style="margin-top: 20px;"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="customer_table" class="display" cellspacing="0"
+                           width="100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="lab_info_col" class="col-sm-5">
+            <div class="row">
+                <div style="margin-top: 20px;"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="complaint_table" class="display" cellspacing="0" width="100%">
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row">
+            <div style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="alert alert-info fade in">
+            <div id="returned_info"></div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
